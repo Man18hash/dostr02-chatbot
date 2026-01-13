@@ -1,0 +1,234 @@
+# Regional Standards and Testing Laboratory (RSTL)
+
+## Microbiological Testing Laboratory
+
+The Microbiological Testing Laboratory offers testing for:
+- Water
+- Food and feeds
+- Plant extracts
+
+### Water Tests
+
+| Test Parameter                        | Method       | Fee      |
+|---------------------------------------|--------------|----------|
+| Heterotrophic Plate Count             | Pour Plate   | ₱550.00  |
+| Total Coliform Count                  | MPN          | ₱550.00  |
+| Fecal Coliform Count                  | MPN          | ₱550.00  |
+| Escherichia coli Count                | MPN          | ₱1000.00 |
+
+**Packages:**
+
+| Package     | Inclusions                         | Fee      |
+|-------------|------------------------------------|----------|
+| Package 1   | HPC, TCC, FCC                      | ₱1200.00 |
+| Package 2   | TCC, FCC                           | ₱650.00  |
+| Package 3   | HPC, TCC, E. coli                  | ₱1700.00 |
+| Package 4   | TCC, E. coli                       | ₱1100.00 |
+
+### Foods and Feeds Tests
+
+| Test Parameter            | Method       | Fee      |
+|---------------------------|--------------|----------|
+| Aerobic Plate Count       | Pour Plate   | ₱550.00  |
+| Total Coliform Count      | MPN          | ₱550.00  |
+| Yeast and Molds Count     | Pour Plate   | ₱550.00  |
+| Escherichia coli Count    | MPN          | ₱1000.00 |
+
+### Plant Extract Tests
+
+| Test                                        | Fee     |
+|---------------------------------------------|---------|
+| Antimicrobial Susceptibility Test (PDD)     | ₱600.00 |
+
+---
+
+## Chemical Testing Laboratory
+
+The Chemical Testing Laboratory offers testing for:
+- Water
+- Food and feeds
+- Plant extracts
+
+### Water Tests
+
+| Test Parameter            | Method                           | Fee      |
+|---------------------------|----------------------------------|----------|
+| Arsenic                   | HVS-FAAS                         | ₱1060.00 |
+| Cadmium                   | GFAS                             | ₱1000.00 |
+| Color                     | Platinum Cobalt Standard Method  | ₱300.00  |
+| Lead                      | GFAS                             | ₱1000.00 |
+| Nitrates                  | Spectrophotometry                | ₱850.00  |
+| pH                        | Potentiometry                    | ₱350.00  |
+| Total Dissolved Solids    | Gravimetry                       | ₱600.00  |
+| Turbidity                 | Nephelometric Method             | ₱300.00  |
+| Residual Chlorine         | Spectrophotometry                | ₱400.00  |
+
+**Packages:**
+
+| Package      | Parameters Included                                             		| Fee      |
+|--------------|--------------------------------------------------------------------------------|----------|
+| 7 Parameters | Arsenic, Cadmium, Lead, Color, pH, TDS, Turbidity              		| ₱2000.00 |
+| 8 Parameters | Arsenic, Cadmium, Lead, Color, pH, TDS, Turbidity, Nitrates   			| ₱2800.00 |
+| 9 Parameters | Arsenic, Cadmium, Lead, Color, pH, TDS, Turbidity, Nitrates, Residual Chlorine	| ₱3200.00 |
+
+### Foods and Feeds Tests
+
+| Test                         | Method                       | Fee      |
+|------------------------------|------------------------------|----------|
+| Crude Fat                    | Solvent Extraction           | ₱960.00  |
+| Crude Protein                | Block Digestion              | ₱1000.00 |
+| Ethanol in Wine              | Steam Distillation Pycnometer| ₱470.00  |
+| Moisture                     | Air Oven                     | ₱400.00  |
+| Total Acidity                | Titrimetry                   | ₱300.00  |
+| Ash                          | Gravimetry                   | ₱550.00  |
+
+### Plant Extract Tests
+
+| Test                    | Fee     |
+|-------------------------|---------|
+| Phytochemical Screening | ₱487.50 |
+
+---
+
+## Sample Size Requirements
+
+| Sample Type             | Test Type             | Sample Amount                            |
+|-------------------------|-----------------------|------------------------------------------|
+| Foods and Feeds         | Chemical Testing      | Solid: 500g, Liquid: 500mL               |
+|                         | Microbiological       | Solid: 250g, Liquid: 500mL               |
+| Water                   | Chemical Testing      | 1000 mL                                  |
+|                         | Microbiological       | 500 mL (sterile container, within 6 hrs) |
+| Plant Extracts          | Chemical Testing      | 250 mL                                   |
+|                         | Microbiological       | 200 mL                                   |
+
+**Water Sample Submission Notes:**
+- Must be labeled with name, address, contact number.
+- Include date and time of collection.
+- Non-compliant samples will be advised for resubmission.
+
+---
+
+## Additional Services for Researchers
+
+| Service                         | Fee           |
+|---------------------------------|---------------|
+| Sterilization & Decontamination | ₱160.00/hour  |
+| Drying of Plant Sample          | ₱150.00/hour  |
+| Incubation                      | ₱150.00/hour  |
+
+---
+
+# Regional Metrology Laboratory (RML)
+
+## Measurement Area: Pressure
+
+| Device                                      | Method                                                                   | Fee     |
+|---------------------------------------------|--------------------------------------------------------------------------|---------|
+| Pressure Gauges (up to 70 MPa)              | Direct Comparison using Pressure Comparator and Standard Test Gauge      | ₱900.00 |
+| Sphygmomanometers (up to 300 mmHg)          | Verification using Standard Test Gauge                                   | ₱900.00 |
+
+## Measurement Area: Thermometry and Hygrometry
+
+| Device                                                        | Method                                                                       | Fee                                                                         |
+|---------------------------------------------------------------|------------------------------------------------------------------------------|-----------------------------------------------------------------------------|
+| Thermometers (-20 to 150 ºC) (first 5 set points)             | Direct Comparison using Calibration Bath and Platinum Resistance Thermometer | ₱1700.00 (first 5 set points)                                               |
+|                                                               |                                                                              | ₱500.00 (per additional set point)                                          |
+| Thermo-hygrometers (20, 25, 30 ºC; 40%, 60%, 80% RH at 23 ºC) | Direct Comparison using Climatic Chamber and Standard Thermo-hygrometer      | ₱1500.00 (1 temperature sensor and 1 humidity sensor)                       |
+|                                                               |                                                                              | ₱1000.00 (for temperature sensor only or for additional temperature sensor) |
+|                                                               |                                                                              | ₱1000.00 (for humidity sensor only or for additional humidity sensor)       |
+| Room/Wall/Freezer Thermometers (0-45 ºC)                      | Direct Comparison using Climatic Chamber and Standard Thermometer            | ₱1000.00 (6 set points)                                                     |
+| Temperature-Controlled Enclosures (up to 150 ºC)              | Direct Comparison using Standard Thermocouples and Temperature Recorder      | ₱2100.00 (1 set point only)                                                 |
+|                                                               |                                                                              | ₱500.00 (per additional set point)                                          |
+
+## Measurement Area: Length
+
+| Device                    | Method                                                | Fee      |
+|---------------------------|-------------------------------------------------------|----------|
+| Rules (300 mm and below)  | Direct Comparison using Scale Loupe and Standard Rule | ₱500.00  |
+| Rules (>300 mm - 600 mm)  | Direct Comparison using Scale Loupe and Standard Rule | ₱650.00  | 
+| Rules (>600 mm)           | Direct Comparison using Scale Loupe and Standard Rule | ₱900.00  | 
+| Height Boards             | Direct Comparison using Scale Loupe and Standard Rule | ₱900.00  |
+| Calipers (0-250 mm)       | Direct Measurement using Gauge Block Grade 1          | ₱1225.00 |
+
+## Measurement Area: Mass
+
+**Test Weights, Class F2 (Direct Substitution using Standard Weights)**
+
+| Weight Range  | Fee         |
+|---------------|-------------|
+| Up to 5 kg    | ₱600.00/pc  |
+| 10–20 kg      | ₱800.00/pc  |
+
+**Test Weights, Class M Series (Direct Substitution using Standard Weights)**
+
+| Weight Range  | Fee         |
+|---------------|-------------|
+| Up to 5 kg    | ₱450.00/pc  |
+| 10–20 kg      | ₱600.00/pc  |
+| 25–50 kg      | ₱700.00/pc  |
+
+**Non-Automatic Weighing Instruments (Direct Measurement using Standard Weights)**
+
+ Accuracy Type             | Fee       |
+|--------------------------|-----------|
+| Special Accuracy         | ₱1200.00  |
+| High Accuracy            | ₱1000.00  |
+| Medium Accuracy          | ₱900.00   |
+| Ordinary Accuracy        | ₱800.00   |
+| Per additional tonnage   | ₱50.00    |
+
+## Measurement Area: Volume
+
+**Standard Test Measures - Volumetric Method**
+
+| Capacity    | Fee     |
+|-------------|---------|
+| 5–10 L      | ₱500.00 |
+| 20–50 L     | ₱600.00 |
+
+**Proving Tanks - Volumetric Method**
+
+| Capacity       | Fee      |
+|----------------|----------|
+| 100–400 L      | ₱1500.00 |
+| 500–2000 L     | ₱3000.00 |
+
+**Laboratory Volumetric Instruments - Gravimetric Method**
+
+| Device                                             | Fee      |
+|----------------------------------------------------|----------|
+| Graduated Pipettes                                 | ₱600.00  |
+| Volumetric Pipettes                                | ₱600.00  |
+| Volumetric Flasks                                  | ₱600.00  |
+| Graduated Cylinders (5 pts)                        | ₱600.00  |
+| Burettes (5 pts)                                   | ₱1500.00 |
+| Piston-operated Volumetric Apparatus               | ₱1500.00 |
+
+**Verification of Fuel Dispensing Pumps - Volumetric Method**
+
+| Service                     | Fee     |
+|-----------------------------|---------|
+| Volume Delivered per Nozzle | ₱700.00 |
+
+**Testing of Road Tankers - Volumetric Method**
+
+| Volume Range        | Fee      |
+|---------------------|----------|
+| 5000 L and below    | ₱1000.00 |
+| >5000–10000 L       | ₱1500.00 |
+| >10000–15000 L      | ₱2000.00 |
+| >15000–20000 L      | ₱2500.00 |
+| >20000–25000 L      | ₱3000.00 |
+| >25000–30000 L      | ₱3500.00 |
+| >30000–35000 L      | ₱4000.00 |
+| >30000–40000 L      | ₱4500.00 |
+| >40000–45000 L      | ₱5000.00 |
+| >45000–50000 L      | ₱5500.00 |
+| 50000 L and above   | ₱6000.00 |
+
+## On-site/In-plant Calibration Charge
+
+| Distance                                                      | Fee      |
+|---------------------------------------------------------------|----------|
+| Within 50 km radius from base laboratory per day per team     | ₱2000.00 |
+| More than 50 km radius from base laboratory per day per team  | ₱3000.00 |

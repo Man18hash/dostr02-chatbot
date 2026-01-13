@@ -1,0 +1,10 @@
+{
+    "items": [
+      {
+        "service": "REPLACE_ME (service name)",
+        "required_docs": ["Doc 1", "Doc 2"],
+        "source": "Requirements memo / document title"
+      }
+    ]
+  }
+  

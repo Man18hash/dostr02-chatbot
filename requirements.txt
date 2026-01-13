@@ -1,0 +1,10 @@
+gradio
+torch
+faiss-cpu
+unstructured
+langchain-core
+langchain-community
+langchain-text-splitters
+langchain-huggingface
+langchain-ollama
+sentence-transformers

@@ -1,0 +1,12 @@
+{
+    "items": [
+      {
+        "service": "REPLACE_ME (service name)",
+        "fee_php": 0,
+        "unit": "per piece",
+        "notes": "optional notes/conditions",
+        "source": "Fee memo / document title"
+      }
+    ]
+  }
+  
