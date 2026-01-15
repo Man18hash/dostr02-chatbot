@@ -191,7 +191,7 @@ The Chemical Testing Laboratory offers testing for:
 | Capacity       | Fee      |
 |----------------|----------|
 | 100–400 L      | ₱1500.00 |
-| 500–2000 L     | ₱3000.00 |
+| 500–2000 L     | ₱3000.00 | 
 
 **Laboratory Volumetric Instruments - Gravimetric Method**
 
