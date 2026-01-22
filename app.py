@@ -74,7 +74,7 @@ APP_CSS = """
     }
 
     .dost-logo-container img {
-        max-width: 200px;
+        max-width: 80px;
         width: auto;
         height: auto;
         object-fit: contain;
@@ -212,8 +212,6 @@ with gr.Blocks(title="DOST Hybrid Chatbot") as gui:
                 ask = gr.Button("Ask", variant="primary", scale=1)
                 clear = gr.Button("Clear", variant="secondary", scale=1)
 
-    state = gr.State([])
-
             gr.Markdown(
                 """
                 <div class="dost-footer">
@@ -223,27 +221,29 @@ with gr.Blocks(title="DOST Hybrid Chatbot") as gui:
                 """
             )
 
-        # Full-screen loading overlay
-        loader = gr.HTML(
-            """
-            <div class="dost-loading-overlay">
-                <div class="dost-loading-card">
-                    <div class="dost-spinner"></div>
-                    <div><strong>Thinking…</strong><br/><span style="font-size: 0.85rem;">Generating the best answer for you.</span></div>
-                </div>
+    state = gr.State([])
+
+    # Full-screen loading overlay
+    loader = gr.HTML(
+        """
+        <div class="dost-loading-overlay">
+            <div class="dost-loading-card">
+                <div class="dost-spinner"></div>
+                <div><strong>Thinking…</strong><br/><span style="font-size: 0.85rem;">Generating the best answer for you.</span></div>
             </div>
-            """,
-            visible=False,
-        )
+        </div>
+        """,
+        visible=False,
+    )
 
-        # Wire interactions: show loader -> answer -> hide loader
-        ask.click(show_loader, outputs=loader).then(
-            chat_response, inputs=[q, state], outputs=[chatbot, state, q]
-        ).then(hide_loader, outputs=loader)
+    # Wire interactions: show loader -> answer -> hide loader
+    ask.click(show_loader, outputs=loader).then(
+        chat_response, inputs=[q, state], outputs=[chatbot, state, q]
+    ).then(hide_loader, outputs=loader)
 
-        q.submit(show_loader, outputs=loader).then(
-            chat_response, inputs=[q, state], outputs=[chatbot, state, q]
-        ).then(hide_loader, outputs=loader)
+    q.submit(show_loader, outputs=loader).then(
+        chat_response, inputs=[q, state], outputs=[chatbot, state, q]
+    ).then(hide_loader, outputs=loader)
 
     clear.click(lambda: ([], []), outputs=[chatbot, state])
 
