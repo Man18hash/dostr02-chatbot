@@ -1,5 +1,8 @@
 import logging
+import time
+import threading
 import gradio as gr
+
 from src.router import hybrid_answer
 from src.model_cache import get_vectorstore, get_reranker, get_llm
 from src.official_store import load_official
@@ -8,45 +11,9 @@ from config import OFFICIAL_DIR
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger("dost-hybrid")
 
-def chat_response(query, history):
-    """
-    Gradio 6 `Chatbot` now uses a messages format:
-    a list of dicts with `role` and `content`.
-    We keep `history` as that list and append the
-    latest user and assistant messages.
-    """
-    if history is None:
-        history = []
-
-    if not query or not query.strip():
-        return history, history, query  # Keep the text if empty
-
-    user_text = query.strip()
-
-    try:
-        answer = hybrid_answer(user_text)
-    except Exception as e:
-        logger.exception(e)
-        answer = "Sorry, an error occurred."
-
-    history = history + [
-        {"role": "user", "content": user_text},
-        {"role": "assistant", "content": answer},
-    ]
-
-    # Return history, history, and empty string to clear the input textbox
-    return history, history, ""
-
-
-def show_loader():
-    """Show the full-screen loading overlay."""
-    return gr.update(visible=True)
-
-
-def hide_loader():
-    """Hide the full-screen loading overlay."""
-    return gr.update(visible=False)
-
+# ---------------------------
+# Theme + CSS (pass to launch in Gradio 6.x)
+# ---------------------------
 APP_THEME = gr.themes.Soft(
     primary_hue="blue",
     secondary_hue="indigo",
@@ -54,136 +21,349 @@ APP_THEME = gr.themes.Soft(
 )
 
 APP_CSS = """
-    body {
-        background-color: #f4f4f5;
-    }
+body { background-color: #f4f4f5; }
 
-    .dost-page {
-        min-height: 100vh;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: flex-start;
-        padding-top: 4rem;
-    }
+.dost-page {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  padding-top: 4rem;
+}
 
-    .dost-logo-container {
-        display: flex;
-        justify-content: center;
-        margin-bottom: 1rem;
-    }
+.dost-logo-container {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 1rem;
+}
+.dost-logo-container img {
+  max-width: 80px;
+  width: auto;
+  height: auto;
+  object-fit: contain;
+}
 
-    .dost-logo-container img {
-        max-width: 80px;
-        width: auto;
-        height: auto;
-        object-fit: contain;
-    }
+/* Hide footer */
+footer,
+.gradio-container footer,
+.gradio-container .footer {
+  display: none !important;
+}
 
-    /* Hide Gradio footer elements */
-    footer {
-        display: none !important;
-    }
+.dost-header-title {
+  font-size: 2.1rem;
+  font-weight: 600;
+  text-align: center;
+  margin-bottom: 1.25rem;
+}
+.dost-subtitle {
+  font-size: 0.95rem;
+  color: #6b7280;
+  text-align: center;
+  margin-bottom: 2rem;
+}
 
-    .gradio-container footer,
-    .gradio-container .footer {
-        display: none !important;
-    }
+.dost-main-card {
+  width: 100%;
+  max-width: 960px;
+  background: white;
+  border-radius: 1.5rem;
+  box-shadow: 0 18px 45px rgba(15, 23, 42, 0.12);
+  padding: 1.5rem 1.75rem 1.2rem 1.75rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
 
-    .dost-header-title {
-        font-size: 2.1rem;
-        font-weight: 600;
-        text-align: center;
-        margin-bottom: 1.25rem;
-    }
+.dost-chatbot {
+  border-radius: 1rem;
+  background: #f9fafb;
+}
 
-    .dost-subtitle {
-        font-size: 0.95rem;
-        color: #6b7280;
-        text-align: center;
-        margin-bottom: 2rem;
-    }
+.dost-input-row {
+  display: flex;
+  gap: 0.75rem;
+  align-items: center;
+  margin-top: 0.25rem;
+}
 
-    .dost-main-card {
-        width: 100%;
-        max-width: 960px;
-        background: white;
-        border-radius: 1.5rem;
-        box-shadow: 0 18px 45px rgba(15, 23, 42, 0.12);
-        padding: 1.5rem 1.75rem 1.2rem 1.75rem;
-        display: flex;
-        flex-direction: column;
-        gap: 1rem;
-    }
+.dost-footer {
+  font-size: 0.75rem;
+  color: #9ca3af;
+  text-align: center;
+  margin-top: 1.25rem;
+}
 
-    .dost-chatbot {
-        border-radius: 1rem;
-        background: #f9fafb;
-    }
+/* mini quick cards below chat */
+.mini-cards-row{
+  width: 100%;
+  gap: 10px;
+  margin-top: 6px;
+}
+.mini-card{
+  background: #ffffff;
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+  padding: 10px 12px;
+  text-align: center;
+  cursor: pointer;
+  box-shadow: 0 4px 10px rgba(15,23,42,0.06);
+  transition: transform .15s ease, box-shadow .15s ease, border-color .15s ease;
+  user-select: none;
+}
+.mini-card:hover{
+  transform: translateY(-1px);
+  box-shadow: 0 6px 14px rgba(15,23,42,0.10);
+  border-color: #3b82f6;
+}
+.mini-card-text{
+  font-size: 0.95rem;
+  font-weight: 600;
+  margin: 0 !important;
+  line-height: 1.1;
+  white-space: nowrap;
+}
 
-    .dost-input-row {
-        display: flex;
-        gap: 0.75rem;
-        align-items: center;
-        margin-top: 0.25rem;
-    }
+/* Optional: visually indicate disabled textbox */
+textarea[disabled], input[disabled] {
+  opacity: 0.6 !important;
+  cursor: not-allowed !important;
+}
 
-    .dost-footer {
-        font-size: 0.75rem;
-        color: #9ca3af;
-        text-align: center;
-        margin-top: 1.5rem;
-    }
+/* Logo row styling */
+.logo-row {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 15px;
+  margin-top: 30px;
+  padding: 20px 10px;
+  border-top: 1px solid #e5e7eb;
+  max-width: 960px;
+  width: 100%;
+  margin-left: auto;
+  margin-right: auto;
+}
 
-    .dost-loading-overlay {
-        position: fixed;
-        inset: 0;
-        background: rgba(15, 23, 42, 0.55);
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        z-index: 1000;
-    }
+.dost-logo-container {
+  height: 60px;
+  width: auto;
+  min-width: 100px;
+  max-width: 160px;
+  object-fit: contain;
+  filter: grayscale(20%);
+  transition: filter 0.3s ease, transform 0.3s ease;
+  border-radius: 4px;
+  background: transparent;
+  padding: 0;
+  pointer-events: none;
+  user-select: none;
+  -webkit-user-drag: none;
+  -khtml-user-drag: none;
+  -moz-user-drag: none;
+  -o-user-drag: none;
+  -webkit-touch-callout: none;
+  flex-shrink: 0;
+  flex-grow: 0;
+  flex-basis: auto;
+}
 
-    .dost-loading-card {
-        background: #020617;
-        color: #e5e7eb;
-        padding: 1.25rem 1.75rem;
-        border-radius: 0.75rem;
-        display: flex;
-        align-items: center;
-        gap: 0.9rem;
-        box-shadow: 0 18px 45px rgba(15, 23, 42, 0.6);
-        font-size: 0.95rem;
-    }
+.dost-logo-container:hover {
+  filter: grayscale(0%);
+  transform: scale(1.05);
+}
 
-    .dost-spinner {
-        width: 1.4rem;
-        height: 1.4rem;
-        border-radius: 9999px;
-        border: 3px solid rgba(148, 163, 184, 0.45);
-        border-top-color: #38bdf8;
-        animation: dost-spin 0.9s linear infinite;
-    }
+/* Hide Gradio controls */
+.dost-logo-container .download-btn,
+.dost-logo-container .screenshot-btn,
+.dost-logo-container .zoom-btn {
+  display: none !important;
+}
 
-    @keyframes dost-spin {
-        from { transform: rotate(0deg); }
-        to { transform: rotate(360deg); }
-    }
-    """
+/* Responsive design for all devices */
+@media (max-width: 768px) {
+  .logo-row {
+    gap: 12px;
+    padding: 15px 8px;
+  }
+  
+  .dost-logo-container {
+    height: 50px;
+    min-width: 80px;
+    max-width: 120px;
+  }
+}
 
+@media (max-width: 480px) {
+  .logo-row {
+    gap: 8px;
+    padding: 12px 5px;
+  }
+  
+  .dost-logo-container {
+    height: 45px;
+    min-width: 70px;
+    max-width: 100px;
+  }
+}
+
+@media (max-width: 390px) {
+  .logo-row {
+    gap: 6px;
+    padding: 10px 3px;
+    justify-content: center;
+  }
+  
+  .dost-logo-container {
+    height: 40px;
+    min-width: 60px;
+    max-width: 85px;
+  }
+}
+
+@media (max-width: 320px) {
+  .logo-row {
+    gap: 4px;
+    padding: 8px 2px;
+  }
+  
+  .dost-logo-container {
+    height: 35px;
+    min-width: 50px;
+    max-width: 70px;
+  }
+}
+
+/* Landscape orientation */
+@media (max-height: 500px) and (orientation: landscape) {
+  .logo-row {
+    gap: 10px;
+    padding: 8px 5px;
+  }
+  
+  .dost-logo-container {
+    height: 35px;
+    min-width: 80px;
+    max-width: 120px;
+  }
+}
+"""
+
+# ---------------------------
+# Helpers: always enforce messages format
+# ---------------------------
+def ensure_messages(history):
+    if history is None:
+        return []
+    if not isinstance(history, list):
+        return []
+
+    cleaned = []
+    for item in history:
+        if isinstance(item, dict) and "role" in item and "content" in item:
+            cleaned.append({"role": str(item["role"]), "content": item["content"]})
+            continue
+
+        # Convert (user, bot) tuples if they ever sneak in
+        if isinstance(item, (tuple, list)) and len(item) == 2:
+            u, a = item
+            if u is not None:
+                cleaned.append({"role": "user", "content": str(u)})
+            if a is not None:
+                cleaned.append({"role": "assistant", "content": str(a)})
+            continue
+
+    return cleaned
+
+
+# ---------------------------
+# Chat logic:
+# - beating dot (pulse frames)
+# - disable input while thinking
+# ---------------------------
+def chat_response(query, history):
+    history = ensure_messages(history)
+
+    if not query or not query.strip():
+        # keep as-is
+        yield history, history, query, gr.update(interactive=True), gr.update(interactive=True)
+        return
+
+    user_text = query.strip()
+
+    # Disable textbox + Ask button immediately
+    yield history, history, "", gr.update(interactive=False), gr.update(interactive=False)
+
+    # Append user
+    history.append({"role": "user", "content": user_text})
+
+    # Append assistant placeholder
+    history.append({"role": "assistant", "content": "●"})
+    yield history, history, "", gr.update(interactive=False), gr.update(interactive=False)
+
+    # Background compute
+    result = {"done": False, "answer": None, "error": None}
+
+    def worker():
+        try:
+            result["answer"] = hybrid_answer(user_text)
+        except Exception as e:
+            logger.exception(e)
+            result["error"] = e
+        finally:
+            result["done"] = True
+
+    t = threading.Thread(target=worker, daemon=True)
+    t.start()
+
+    # Beating dot frames (pulse 느낌)
+    # You can tweak these for a different "beat"
+    frames = ["·", "●", "●●", "●●●", "●●", "●"]
+    i = 0
+
+    while not result["done"]:
+        history[-1] = {"role": "assistant", "content": frames[i % len(frames)]}
+        i += 1
+        yield history, history, "", gr.update(interactive=False), gr.update(interactive=False)
+        time.sleep(0.18)
+
+    answer = "Sorry, an error occurred." if result["error"] else (result["answer"] or "Sorry, I couldn't generate an answer.")
+    history[-1] = {"role": "assistant", "content": answer}
+
+    # Re-enable textbox + Ask button after answering
+    yield history, history, "", gr.update(interactive=True), gr.update(interactive=True)
+
+
+def on_card_click(card_id):
+    questions = {
+        "tech-card": "Tell me about DOST's latest technologies and innovations.",
+        "programs-card": "What are the current DOST programs and projects?",
+        "services-card": "What services does DOST Region II offer?",
+    }
+    return questions.get(card_id, "")
+
+
+def clear_all():
+    # chat, state, textbox, textbox interactive, ask interactive
+    return [], [], "", gr.update(interactive=True), gr.update(interactive=True)
+
+
+# ---------------------------
+# UI
+# ---------------------------
 with gr.Blocks(title="DOST Hybrid Chatbot") as gui:
     with gr.Column(elem_classes=["dost-page"]):
-        # DOST Logo - small size
         gr.Image(
-            value="img/dost_logo150.png",
+            value="img/dost.png",
             show_label=False,
             container=False,
             height=80,
             width=None,
             elem_classes=["dost-logo-container"],
         )
-        
+
         gr.Markdown(
             """
             <div class="dost-header-title">What can I help with?</div>
@@ -194,14 +374,12 @@ with gr.Blocks(title="DOST Hybrid Chatbot") as gui:
         )
 
         with gr.Column(elem_classes=["dost-main-card"]):
-            # Chat area
             chatbot = gr.Chatbot(
                 label=None,
                 height=420,
                 elem_classes=["dost-chatbot"],
             )
 
-            # Input row similar to ChatGPT prompt bar
             with gr.Row(elem_classes=["dost-input-row"]):
                 q = gr.Textbox(
                     placeholder="Ask anything about DOST Region II…",
@@ -211,6 +389,14 @@ with gr.Blocks(title="DOST Hybrid Chatbot") as gui:
                 )
                 ask = gr.Button("Ask", variant="primary", scale=1)
                 clear = gr.Button("Clear", variant="secondary", scale=1)
+
+            with gr.Row(elem_classes=["mini-cards-row"]):
+                with gr.Column(scale=1, min_width=150, elem_classes=["mini-card"], elem_id="tech-card"):
+                    gr.Markdown("🔍 Technologies", elem_classes="mini-card-text")
+                with gr.Column(scale=1, min_width=150, elem_classes=["mini-card"], elem_id="programs-card"):
+                    gr.Markdown("📋 Programs", elem_classes="mini-card-text")
+                with gr.Column(scale=1, min_width=150, elem_classes=["mini-card"], elem_id="services-card"):
+                    gr.Markdown("🏢 Services", elem_classes="mini-card-text")
 
             gr.Markdown(
                 """
@@ -223,33 +409,86 @@ with gr.Blocks(title="DOST Hybrid Chatbot") as gui:
 
     state = gr.State([])
 
-    # Full-screen loading overlay
-    loader = gr.HTML(
-        """
-        <div class="dost-loading-overlay">
-            <div class="dost-loading-card">
-                <div class="dost-spinner"></div>
-                <div><strong>Thinking…</strong><br/><span style="font-size: 0.85rem;">Generating the best answer for you.</span></div>
-            </div>
-        </div>
-        """,
-        visible=False,
+    # Ask + Enter:
+    # Outputs: chatbot, state, textbox(value), textbox(interactive), ask(interactive)
+    ask.click(
+        chat_response,
+        inputs=[q, state],
+        outputs=[chatbot, state, q, q, ask],
+    )
+    q.submit(
+        chat_response,
+        inputs=[q, state],
+        outputs=[chatbot, state, q, q, ask],
     )
 
-    # Wire interactions: show loader -> answer -> hide loader
-    ask.click(show_loader, outputs=loader).then(
-        chat_response, inputs=[q, state], outputs=[chatbot, state, q]
-    ).then(hide_loader, outputs=loader)
+    # Clear:
+    clear.click(clear_all, outputs=[chatbot, state, q, q, ask])
 
-    q.submit(show_loader, outputs=loader).then(
-        chat_response, inputs=[q, state], outputs=[chatbot, state, q]
-    ).then(hide_loader, outputs=loader)
+    # Hidden buttons for card -> fill textbox
+    tech_btn = gr.Button("Tech Button", visible=False, elem_id="tech-btn")
+    programs_btn = gr.Button("Programs Button", visible=False, elem_id="programs-btn")
+    services_btn = gr.Button("Services Button", visible=False, elem_id="services-btn")
 
-    clear.click(lambda: ([], []), outputs=[chatbot, state])
+    tech_btn.click(lambda: on_card_click("tech-card"), outputs=[q])
+    programs_btn.click(lambda: on_card_click("programs-card"), outputs=[q])
+    services_btn.click(lambda: on_card_click("services-card"), outputs=[q])
+
+    gr.HTML(
+        """
+        <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const techCard = document.getElementById('tech-card');
+            if (techCard) techCard.onclick = () => document.getElementById('tech-btn')?.click();
+
+            const programsCard = document.getElementById('programs-card');
+            if (programsCard) programsCard.onclick = () => document.getElementById('programs-btn')?.click();
+
+            const servicesCard = document.getElementById('services-card');
+            if (servicesCard) servicesCard.onclick = () => document.getElementById('services-btn')?.click();
+        });
+        </script>
+        """
+    )
+    
+    # Add logos at the bottom
+    with gr.Row(elem_classes=["logo-row"]):
+        gr.Image(
+            value="img/dost.png",
+            show_label=False,
+            container=False,
+            height=80,
+            width=None,
+            elem_classes=["dost-logo-container"],
+        )
+        gr.Image(
+            value="img/one-cagayan.png",
+            show_label=False,
+            container=False,
+            height=80,
+            width=None,
+            elem_classes=["dost-logo-container"],
+        )
+        gr.Image(
+            value="img/bagong-pilipinas.png",
+            show_label=False,
+            container=False,
+            height=80,
+            width=None,
+            elem_classes=["dost-logo-container"],
+        )
+        gr.Image(
+            value="img/ihub.png",
+            show_label=False,
+            container=False,
+            height=80,
+            width=None,
+            elem_classes=["dost-logo-container"],
+        )
+
 
 if __name__ == "__main__":
-    # Preload all models at startup for faster first response
-    print("Loading models (this may take 10-15 seconds on first run)...")
+    print("Loading models (may take a while on first run)...")
     try:
         get_vectorstore()
         print("✓ Vectorstore loaded")
@@ -263,11 +502,12 @@ if __name__ == "__main__":
     except Exception as e:
         print(f"Warning: Error preloading models: {e}")
         print("Models will load on first request (slower first response)")
-    
-    # Listen on all network interfaces (0.0.0.0) so phone can access via WiFi
+
+    gui.queue()
+
     gui.launch(
-        server_name="0.0.0.0",  # Allows access from other devices on same network
-        server_port=7860,       # Fixed port for easier access
+        server_name="0.0.0.0",
+        server_port=7860,
         share=False,
         theme=APP_THEME,
         css=APP_CSS,

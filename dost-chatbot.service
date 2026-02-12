@@ -1,0 +1,15 @@
+[Unit]
+Description=DOST Hybrid Chatbot Service
+After=network.target
+
+[Service]
+Type=simple
+User=ubuntu
+WorkingDirectory=/home/ubuntu/dost-hybrid-chatbot
+Environment=PATH=/home/ubuntu/dost-hybrid-chatbot/.venv/bin
+ExecStart=/home/ubuntu/dost-hybrid-chatbot/.venv/bin/python app.py
+Restart=always
+RestartSec=10
+
+[Install]
+WantedBy=multi-user.target
